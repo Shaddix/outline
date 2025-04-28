@@ -107,6 +107,7 @@ export enum IntegrationType {
   LinkedAccount = "linkedAccount",
   /** An integration that imports documents into Outline. */
   Import = "import",
+  Custom = "custom",
 }
 
 export enum IntegrationService {
@@ -118,6 +119,7 @@ export enum IntegrationService {
   Umami = "umami",
   GitHub = "github",
   Notion = "notion",
+  Azure = "azure",
 }
 
 export type ImportableIntegrationService = Extract<
@@ -129,6 +131,7 @@ export const ImportableIntegrationService = {
   Notion: IntegrationService.Notion,
 } as const;
 
+
 export type UserCreatableIntegrationService = Extract<
   IntegrationService,
   | IntegrationService.Diagrams
@@ -136,6 +139,7 @@ export type UserCreatableIntegrationService = Extract<
   | IntegrationService.GoogleAnalytics
   | IntegrationService.Matomo
   | IntegrationService.Umami
+  | IntegrationService.Azure
 >;
 
 export const UserCreatableIntegrationService = {
@@ -144,6 +148,7 @@ export const UserCreatableIntegrationService = {
   GoogleAnalytics: IntegrationService.GoogleAnalytics,
   Matomo: IntegrationService.Matomo,
   Umami: IntegrationService.Umami,
+  Azure: IntegrationService.Azure,
 } as const;
 
 export enum CollectionPermission {
@@ -160,14 +165,14 @@ export enum DocumentPermission {
 
 export type IntegrationSettings<T> = T extends IntegrationType.Embed
   ? {
-      url: string;
-      github?: {
-        installation: {
-          id: number;
-          account: { id: number; name: string; avatarUrl: string };
-        };
+    url: string;
+    github?: {
+      installation: {
+        id: number;
+        account: { id: number; name: string; avatarUrl: string };
       };
-    }
+    };
+  }
   : T extends IntegrationType.Analytics
   ? { measurementId: string; instanceUrl?: string; scriptName?: string }
   : T extends IntegrationType.Post
@@ -176,21 +181,23 @@ export type IntegrationSettings<T> = T extends IntegrationType.Embed
   ? { serviceTeamId: string }
   : T extends IntegrationType.Import
   ? { externalWorkspace: { id: string; name: string; iconUrl?: string } }
+  : T extends IntegrationType.Custom
+  ? any
   :
-      | { url: string }
-      | {
-          github?: {
-            installation: {
-              id: number;
-              account: { id?: number; name: string; avatarUrl?: string };
-            };
-          };
-        }
-      | { url: string; channel: string; channelId: string }
-      | { serviceTeamId: string }
-      | { measurementId: string }
-      | { slack: { serviceTeamId: string; serviceUserId: string } }
-      | undefined;
+  | { url: string }
+  | {
+    github?: {
+      installation: {
+        id: number;
+        account: { id?: number; name: string; avatarUrl?: string };
+      };
+    };
+  }
+  | { url: string; channel: string; channelId: string }
+  | { serviceTeamId: string }
+  | { measurementId: string }
+  | { slack: { serviceTeamId: string; serviceUserId: string } }
+  | undefined;
 
 export enum UserPreference {
   /** Whether reopening the app should redirect to the last viewed document. */
@@ -335,29 +342,29 @@ export enum NotificationChannelType {
 
 export type NotificationSettings = {
   [event in NotificationEventType]?:
-    | {
-        [type in NotificationChannelType]?: boolean;
-      }
-    | boolean;
+  | {
+    [type in NotificationChannelType]?: boolean;
+  }
+  | boolean;
 };
 
 export const NotificationEventDefaults: Record<NotificationEventType, boolean> =
-  {
-    [NotificationEventType.PublishDocument]: false,
-    [NotificationEventType.UpdateDocument]: true,
-    [NotificationEventType.CreateCollection]: false,
-    [NotificationEventType.CreateComment]: true,
-    [NotificationEventType.ResolveComment]: true,
-    [NotificationEventType.CreateRevision]: false,
-    [NotificationEventType.MentionedInDocument]: true,
-    [NotificationEventType.MentionedInComment]: true,
-    [NotificationEventType.InviteAccepted]: true,
-    [NotificationEventType.Onboarding]: true,
-    [NotificationEventType.Features]: true,
-    [NotificationEventType.ExportCompleted]: true,
-    [NotificationEventType.AddUserToDocument]: true,
-    [NotificationEventType.AddUserToCollection]: true,
-  };
+{
+  [NotificationEventType.PublishDocument]: false,
+  [NotificationEventType.UpdateDocument]: true,
+  [NotificationEventType.CreateCollection]: false,
+  [NotificationEventType.CreateComment]: true,
+  [NotificationEventType.ResolveComment]: true,
+  [NotificationEventType.CreateRevision]: false,
+  [NotificationEventType.MentionedInDocument]: true,
+  [NotificationEventType.MentionedInComment]: true,
+  [NotificationEventType.InviteAccepted]: true,
+  [NotificationEventType.Onboarding]: true,
+  [NotificationEventType.Features]: true,
+  [NotificationEventType.ExportCompleted]: true,
+  [NotificationEventType.AddUserToDocument]: true,
+  [NotificationEventType.AddUserToCollection]: true,
+};
 
 export enum UnfurlResourceType {
   OEmbed = "oembed",

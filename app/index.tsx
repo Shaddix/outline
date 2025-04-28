@@ -25,6 +25,9 @@ import Logger from "./utils/Logger";
 import { PluginManager } from "./utils/PluginManager";
 import history from "./utils/history";
 import { initSentry } from "./utils/sentry";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { createSyncStoragePersister } from "@tanstack/query-sync-storage-persister";
+import { persistQueryClient } from "@tanstack/query-persist-client-core";
 
 // Load plugins as soon as possible
 void PluginManager.loadPlugins();
@@ -39,6 +42,10 @@ if (env.SENTRY_DSN) {
 // Make sure to return the specific export containing the feature bundle.
 const loadFeatures = () => import("./utils/motion").then((res) => res.default);
 
+const queryClient = new QueryClient()
+const persister = createSyncStoragePersister({ storage: window.localStorage });
+void Promise.all(persistQueryClient({ queryClient, persister }))
+
 const commandBarOptions = {
   animations: {
     enterMs: 250,
@@ -52,27 +59,29 @@ if (element) {
       <HelmetProvider>
         <Provider {...stores}>
           <Analytics>
-            <Theme>
-              <ErrorBoundary showTitle>
-                <KBarProvider actions={[]} options={commandBarOptions}>
-                  <LazyPolyfill>
-                    <LazyMotion features={loadFeatures}>
-                      <Router history={history}>
-                        <PageScroll>
-                          <PageTheme />
-                          <ScrollToTop>
-                            <Routes />
-                          </ScrollToTop>
-                          <Toasts />
-                          <Dialogs />
-                          <Desktop />
-                        </PageScroll>
-                      </Router>
-                    </LazyMotion>
-                  </LazyPolyfill>
-                </KBarProvider>
-              </ErrorBoundary>
-            </Theme>
+            <QueryClientProvider client={queryClient}>
+              <Theme>
+                <ErrorBoundary showTitle>
+                  <KBarProvider actions={[]} options={commandBarOptions}>
+                    <LazyPolyfill>
+                      <LazyMotion features={loadFeatures}>
+                        <Router history={history}>
+                          <PageScroll>
+                            <PageTheme />
+                            <ScrollToTop>
+                              <Routes />
+                            </ScrollToTop>
+                            <Toasts />
+                            <Dialogs />
+                            <Desktop />
+                          </PageScroll>
+                        </Router>
+                      </LazyMotion>
+                    </LazyPolyfill>
+                  </KBarProvider>
+                </ErrorBoundary>
+              </Theme>
+            </QueryClientProvider>
           </Analytics>
         </Provider>
       </HelmetProvider>

@@ -7,6 +7,7 @@ import { NotFoundError } from "@server/errors";
 import coalesceBody from "@server/middlewares/coaleseBody";
 import { AppState, AppContext } from "@server/types";
 import { Hook, PluginManager } from "@server/utils/PluginManager";
+import azureRouter from "./_azure/azureRouter";
 import apiKeys from "./apiKeys";
 import attachments from "./attachments";
 import auth from "./auth";
@@ -99,6 +100,8 @@ router.use("/", urls.routes());
 router.use("/", userMemberships.routes());
 router.use("/", reactions.routes());
 router.use("/", imports.routes());
+
+router.use("/", azureRouter.routes());
 
 if (!env.isCloudHosted) {
   router.use("/", installation.routes());

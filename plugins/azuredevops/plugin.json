@@ -1,0 +1,6 @@
+{
+  "id": "azuredevops",
+  "name": "Azure DevOps",
+  "priority": 45,
+  "description": "Adds support for creating tasks in Azure DevOps."
+}

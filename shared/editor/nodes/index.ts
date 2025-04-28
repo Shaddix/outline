@@ -1,3 +1,4 @@
+import AzureBlock from "@shared/_azure/AzureNodeBlock";
 import DateTime from "../extensions/DateTime";
 import History from "../extensions/History";
 import MaxLength from "../extensions/MaxLength";
@@ -67,6 +68,7 @@ export const basicExtensions: Nodes = [
   Placeholder,
   MaxLength,
   DateTime,
+  AzureBlock,
 ];
 
 export const listExtensions: Nodes = [

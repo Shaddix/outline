@@ -44,6 +44,7 @@ export const IntegrationsCreateSchema = BaseSchema.extend({
     /** Integration config/settings */
     settings: z
       .object({ url: z.string().url() })
+      .or(z.any())
       .or(
         z.object({
           url: z.string().url(),
@@ -73,6 +74,7 @@ export const IntegrationsUpdateSchema = BaseSchema.extend({
     /** Integration config/settings */
     settings: z
       .object({ url: z.string().url() })
+      .or(z.any())
       .or(
         z.object({
           url: z.string().url(),

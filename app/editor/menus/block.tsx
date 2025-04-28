@@ -28,6 +28,7 @@ import Image from "@shared/editor/components/Img";
 import { MenuItem } from "@shared/editor/types";
 import { metaDisplay } from "@shared/utils/keyboard";
 import { Dictionary } from "~/hooks/useDictionary";
+import GoogleIcon from "~/components/Icons/GoogleIcon";
 
 const Img = styled(Image)`
   border-radius: 2px;
@@ -86,6 +87,20 @@ export default function blockMenuItems(
       icon: <TodoListIcon />,
       keywords: "checklist checkbox task",
       shortcut: "^ ⇧ 7",
+    },
+    {
+      name: "azure_create_task",
+      title: 'Create task in Azure',
+      icon: <GoogleIcon />,
+      keywords: "azure task",
+      attrs: {},
+    },
+    {
+      name: "azure_reference_task",
+      title: 'Reference Task from Azure',
+      icon: <GoogleIcon />,
+      keywords: "azure workitem reference",
+      attrs: {},
     },
     {
       name: "bullet_list",
