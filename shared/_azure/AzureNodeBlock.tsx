@@ -8,6 +8,7 @@ import { css } from "styled-components";
 import { ComponentProps } from "@shared/editor/types";
 import { WidgetProps } from "@shared/editor/lib/Extension";
 import DialogsStore from "~/stores/DialogsStore";
+import { wrapIn } from "prosemirror-commands";
 
 export const AzureNodeStyles = () => css`
 .azureSomething {
@@ -35,8 +36,6 @@ export default class AzureBlock extends Node {
           default: "tip",
         },
       },
-      content:
-        "(paragraph)+",
       group: "block",
       defining: true,
       draggable: true,
@@ -44,39 +43,13 @@ export default class AzureBlock extends Node {
 
       ],
       toDOM: (node) => {
-        if (typeof document !== "undefined") {
-
-        }
-
         return [
           "div",
           { class: `azure-block`, style: 'border: 1px;' },
-          ["span", { class: "content", style: 'background-color: yellow; border: 1px green;' }, "@igorBychkov"],
-          ["span", { class: "content", style: 'background-color: red; min-width: 40px;' }, "ff"],
-          ["span", { class: 'azureSomething', style: 'background-color: purple; min-width: 40px;' }, 0],
         ];
       },
     };
   }
-  handleStyleChange = (
-    state: EditorState,
-    dispatch: ((tr: Transaction) => void) | undefined,
-  ): boolean => {
-    const { tr, selection } = state;
-    const { $from } = selection;
-    const node = $from.node(-1);
-
-    if (node?.type.name === this.name) {
-      if (dispatch) {
-        const transaction = tr.setNodeMarkup($from.before(-1), undefined, {
-          ...node.attrs,
-        });
-        dispatch(transaction);
-      }
-      return true;
-    }
-    return false;
-  };
 
   component = (props: ComponentProps) => {
     const Component = React.lazy(() => import('./AzureNodeComponent'));
@@ -118,7 +91,7 @@ export default class AzureBlock extends Node {
         dispatch?.(
           state.tr.insert(state.tr.selection.from, type.create(attrs))
         );
-        return false;
+        return true;
       },
     };
   }

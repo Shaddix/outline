@@ -1,6 +1,6 @@
 #!/bin/bash
 
-VERSION="v0.7"
+VERSION="v0.8"
 BASE_IMAGE="shaddix/outline_base:${VERSION}"
 docker build -t $BASE_IMAGE -f Dockerfile.base .
 docker build -t "shaddix/outline:${VERSION}" --build-arg BASE_IMAGE=${BASE_IMAGE} .
