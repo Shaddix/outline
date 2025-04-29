@@ -11,9 +11,7 @@ import DialogsStore from "~/stores/DialogsStore";
 
 export const AzureNodeStyles = () => css`
 .azureSomething {
-    p {
-        background-color: purple;
-    }
+    background-color: rgb(237, 242, 247);
 }`
 const obj = {
   current: null! as DialogsStore,
@@ -96,7 +94,9 @@ export default class AzureBlock extends Node {
             title: 'Create Task',
             content: <React.Suspense fallback=""><CreateAzureTaskModal onCreated={(wi) => {
               attrs['taskId'] = wi.id!;
-              toggleWrap(type, attrs)(state, dispatch);
+              dispatch?.(
+                state.tr.replaceSelectionWith(type.create(attrs)).scrollIntoView()
+              );
             }} /></React.Suspense>,
 
           })
@@ -115,7 +115,10 @@ export default class AzureBlock extends Node {
         }
 
         attrs['taskId'] = taskId;
-        return toggleWrap(type, attrs)(state, dispatch);
+        dispatch?.(
+          state.tr.replaceSelectionWith(type.create(attrs)).scrollIntoView()
+        );
+        return true;
       },
     };
   }
