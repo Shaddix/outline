@@ -32,13 +32,8 @@ export default class AzureBlock extends Node {
         taskId: {
           default: undefined,
         },
-        style: {
-          default: "tip",
-        },
       },
       group: "block",
-      defining: true,
-      draggable: true,
       parseDOM: [
 
       ],
@@ -67,9 +62,11 @@ export default class AzureBlock extends Node {
             title: 'Create Task',
             content: <React.Suspense fallback=""><CreateAzureTaskModal onCreated={(wi) => {
               attrs['taskId'] = wi.id!;
+              const node = type.create(attrs);
               dispatch?.(
-                state.tr.insert(state.tr.selection.from, type.create(attrs))
+                state.tr.replaceSelectionWith(node).scrollIntoView()
               );
+
               setTimeout(() => {
                 this.editor.focus();
               }, 100)
@@ -93,7 +90,7 @@ export default class AzureBlock extends Node {
         attrs['taskId'] = taskId;
         const node = type.create(attrs);
         dispatch?.(
-          state.tr.insert(state.tr.selection.from, node)
+          state.tr.replaceSelectionWith(node).scrollIntoView()
         );
         setTimeout(() => {
           this.editor.focus();
