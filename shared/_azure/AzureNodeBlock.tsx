@@ -1,5 +1,5 @@
 import { NodeSpec, NodeType } from "prosemirror-model";
-import { Command, EditorState, Transaction } from "prosemirror-state";
+import { Command, EditorState, Transaction, Selection } from "prosemirror-state";
 import * as React from "react";
 import { Primitive } from "utility-types";
 import toggleWrap from "../editor/commands/toggleWrap";
@@ -70,6 +70,9 @@ export default class AzureBlock extends Node {
               dispatch?.(
                 state.tr.insert(state.tr.selection.from, type.create(attrs))
               );
+              setTimeout(() => {
+                this.editor.focus();
+              }, 100)
             }} /></React.Suspense>,
 
           })
@@ -88,9 +91,14 @@ export default class AzureBlock extends Node {
         }
 
         attrs['taskId'] = taskId;
+        const node = type.create(attrs);
         dispatch?.(
-          state.tr.insert(state.tr.selection.from, type.create(attrs))
+          state.tr.insert(state.tr.selection.from, node)
         );
+        setTimeout(() => {
+          this.editor.focus();
+        }, 100)
+
         return true;
       },
     };
