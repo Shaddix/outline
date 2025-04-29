@@ -95,7 +95,7 @@ export default class AzureBlock extends Node {
             content: <React.Suspense fallback=""><CreateAzureTaskModal onCreated={(wi) => {
               attrs['taskId'] = wi.id!;
               dispatch?.(
-                state.tr.replaceSelectionWith(type.create(attrs)).scrollIntoView()
+                state.tr.insert(state.tr.selection.from, type.create(attrs))
               );
             }} /></React.Suspense>,
 
@@ -116,9 +116,9 @@ export default class AzureBlock extends Node {
 
         attrs['taskId'] = taskId;
         dispatch?.(
-          state.tr.replaceSelectionWith(type.create(attrs)).scrollIntoView()
+          state.tr.insert(state.tr.selection.from, type.create(attrs))
         );
-        return true;
+        return false;
       },
     };
   }
